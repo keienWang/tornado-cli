@@ -21,6 +21,7 @@ const program = require('commander');
 const { GasPriceOracle } = require('gas-price-oracle');
 const SocksProxyAgent = require('socks-proxy-agent');
 const is_ip_private = require('private-ip');
+const { Console } = require('console');
 
 let web3, torPort, tornado, tornadoContract, tornadoInstance, circuit, proving_key, groth16, erc20, senderAccount, netId, netName, netSymbol, doNotSubmitTx, multiCall, privateRpc, subgraph;
 let MERKLE_TREE_HEIGHT, ETH_AMOUNT, TOKEN_AMOUNT, PRIVATE_KEY;
@@ -149,7 +150,7 @@ async function generateTransaction(to, encodedData, value = 0) {
   const tx = txoptions();
   const signed = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY);
   if (!doNotSubmitTx) {
-    await submitTransaction(signed.rawTransaction);
+    await submitTransaction(signed.rawTransaction); 
   } else {
     console.log('\n=============Raw TX=================', '\n');
     console.log(`Please submit this raw tx to https://${getExplorerLink()}/pushTx, or otherwise broadcast with node cli.js broadcast command.`, `\n`);
@@ -241,7 +242,7 @@ async function deposit({ currency, amount, commitmentNote }) {
     await printETHBalance({ address: senderAccount, name: 'Sender account' });
     const value = isTestRPC ? ETH_AMOUNT : fromDecimals({ amount, decimals: 18 });
     console.log('Submitting deposit transaction');
-    await generateTransaction(contractAddress, tornado.methods.deposit(tornadoInstance, commitment, []).encodeABI(), value);
+    await generateTransaction(contractAddress, tornado.methods.deposit(commitment).encodeABI(), value);
     await printETHBalance({ address: tornadoContract._address, name: 'Tornado contract' });
     await printETHBalance({ address: senderAccount, name: 'Sender account' });
   } else {
@@ -403,7 +404,7 @@ async function withdraw({ deposit, currency, amount, recipient, relayerURL, refu
     if (fee.gt(fromDecimals({ amount, decimals }))) {
       throw new Error('Too high refund');
     };
-
+    
     const { proof, args } = await generateProof({ deposit, currency, amount, recipient, relayerAddress: rewardAccount, fee, refund });
 
     console.log('Sending withdraw transaction through relay');
@@ -432,10 +433,10 @@ async function withdraw({ deposit, currency, amount, recipient, relayerURL, refu
     assert(recipient.toLowerCase() == senderAccount.toLowerCase(), 'Withdrawal recepient mismatches with the account of provided private key from environment file');
     const checkBalance = await web3.eth.getBalance(senderAccount);
     assert(checkBalance !== 0, 'You have 0 balance, make sure to fund account by withdrawing from tornado using relayer first');
-
+  
     const { proof, args } = await generateProof({ deposit, currency, amount, recipient, refund });
 
-    console.log('Submitting withdraw transaction');
+console.log('Submitting withdraw transaction');
     await generateTransaction(contractAddress, tornado.methods.withdraw(tornadoInstance, proof, ...args).encodeABI());
   }
   if (currency === netSymbol.toLowerCase()) {
@@ -821,7 +822,7 @@ async function fetchEvents({ type, currency, amount }) {
   async function syncEvents() {
     try {
       let targetBlock = await web3.eth.getBlockNumber();
-      let chunks = 1000;
+let chunks = 1000;
       console.log("Querying latest events from RPC");
 
       for (let i = startBlock; i < targetBlock; i += chunks) {
@@ -1190,7 +1191,7 @@ async function init({ rpc, noteNetId, currency = 'dai', amount = '100', balanceC
     web3 = new Web3(window.web3.currentProvider, null, {
       transactionConfirmationBlocks: 1
     });
-    contractJson = await (await fetch('build/contracts/TornadoProxy.abi.json')).json();
+    contractJson = await (await fetch('build/contracts/Instance.abi.json')).json();
     instanceJson = await (await fetch('build/contracts/Instance.abi.json')).json();
     circuit = await (await fetch('build/circuits/tornado.json')).json();
     proving_key = await (await fetch('build/circuits/tornadoProvingKey.bin')).arrayBuffer();
@@ -1237,7 +1238,7 @@ async function init({ rpc, noteNetId, currency = 'dai', amount = '100', balanceC
       console.log('Local RPC detected');
       privateRpc = true;
     }
-    contractJson = require('./build/contracts/TornadoProxy.abi.json');
+    contractJson = require('./build/contracts/Instance.abi.json');
     instanceJson = require('./build/contracts/Instance.abi.json');
     circuit = require('./build/circuits/tornado.json');
     proving_key = fs.readFileSync('build/circuits/tornadoProvingKey.bin').buffer;
