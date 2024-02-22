@@ -437,7 +437,7 @@ async function withdraw({ deposit, currency, amount, recipient, relayerURL, refu
     const { proof, args } = await generateProof({ deposit, currency, amount, recipient, refund });
 
 console.log('Submitting withdraw transaction');
-    await generateTransaction(contractAddress, tornado.methods.withdraw(tornadoInstance, proof, ...args).encodeABI());
+    await generateTransaction(contractAddress, tornado.methods.withdraw(proof, ...args).encodeABI());
   }
   if (currency === netSymbol.toLowerCase()) {
     await printETHBalance({ address: recipient, name: 'Recipient' });
@@ -1531,3 +1531,7 @@ async function main() {
 }
 
 main();
+
+//./cli.js withdraw tornado-eth-0.1-5-0x24e8ebd666280d20a540d4fc0b1add0ddc68ddeac84e932e59f055a975d76ab07460bf9142a2e5666906fb1350dddf10ba70a3e73e07db8a13474f4a0691 0xD5431ABdF5529e810A964b9f6816DE58B385bc0F --rpc https://goerli.infura.io/v3/c78e58b2b94e49bc90c157ee47401062
+//./cli.js deposit ETH 0.1 --rpc https://goerli.infura.io/v3/c78e58b2b94e49bc90c157ee47401062
+// tornado-eth-0.1-5-0x24e8ebd666280d20a540d4fc0b1add0ddc68ddeac84e932e59f055a975d76ab07460bf9142a2e5666906fb1350dddf10ba70a3e73e07db8a13474f4a0691
