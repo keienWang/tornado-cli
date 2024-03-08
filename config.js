@@ -121,12 +121,18 @@ module.exports = {
     },
     netId5: {
       'eth': {
+        //Verifier address 0xa7e9722d44b4554BFF38b118c1bd357d64C5CACf
+// Hasher address 0xB216786079837C543546181Cc25E6454Dc03cb29
+// ETHTornado0.1 address 0x54647F7e1A03eC636080fC9A2EBE22f045Dd903A
+// ETHTornado1 address 0xe6Ec734814dAf4A0402dDb9Ef790e0092decC46c
+// ETHTornado10 address 0x78259d2C0B5d18d90967Bb533b8fBD08C40A93a1
+// ETHTornado100 address 0xEDD5394b6ed3773A284B6BECcB728c7Fc7f8CB3d
         'instanceAddress': {
           '0.1': '0xb7C85629E6A35799E523cDBf83f83C84dd3daa48',
-          // '0.1': '0xa55e9fEE78796D51354eE7816D90A827703D5bFf',
-          '1': '0x3aac1cC67c2ec5Db4eA850957b967Ba153aD6279',
-          '10': '0x723B78e67497E85279CB204544566F4dC5d2acA0',
-          '100': '0x0E3A09dDA6B20aFbB34aC7cD4A6881493f3E7bf7'
+          // '0.1': '0x54647F7e1A03eC636080fC9A2EBE22f045Dd903A',
+          '1': '0xe6Ec734814dAf4A0402dDb9Ef790e0092decC46c',
+          '10': '0x78259d2C0B5d18d90967Bb533b8fBD08C40A93a1',
+          '100': '0xEDD5394b6ed3773A284B6BECcB728c7Fc7f8CB3d'
         },
         'deployedBlockNumber': {
           '0.1': 10435459,
